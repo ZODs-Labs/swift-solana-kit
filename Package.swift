@@ -66,6 +66,7 @@ let package = Package(
         .target(name: "Programs", dependencies: ["Addresses", "SolanaErrors"], swiftSettings: swiftSettings),
         .target(name: "RpcGraphql", dependencies: ["CodecsStrings", "FastStableStringify"], swiftSettings: swiftSettings),
         .target(name: "Kit", dependencies: ["Accounts", "Addresses", "Codecs", "Functional", "InstructionPlans", "Instructions", "Keys", "OffchainMessages", "PluginCore", "PluginInterfaces", "ProgramClientCore", "Programs", "Rpc", "RpcApi", "RpcParsedTypes", "RpcSpecTypes", "RpcSubscriptions", "RpcTypes", "Signers", "Subscribable", "Sysvars", "TransactionConfirmation", "TransactionMessages", "Transactions", "SolanaErrors"], swiftSettings: swiftSettings),
+        .testTarget(name: "SolanaErrorsTests", dependencies: ["SolanaErrors"], swiftSettings: swiftSettings),
         .testTarget(name: "OracleSmokeTests", dependencies: ["Kit"]),
         .testTarget(name: "OracleFullTests", dependencies: ["Kit"])
     ]
