@@ -1,0 +1,34 @@
+# Xcode user state / SwiftPM
+.swiftpm/
+xcuserdata/
+*.xcuserstate
+DerivedData/
+
+# Build products
+.build/
+ZODSol.app/
+*.dSYM*
+
+# Archives & artifacts
+*.zip
+*.tar.gz
+*.tgz
+*.dmg
+*.pkg
+
+# Logs & local env
+*.log
+*.local
+*.env.local
+UPSTREAM_PIN
+ 
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+.claude/
+.env*
+CLAUDE.md
+AGENTS.md

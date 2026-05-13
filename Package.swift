@@ -1,0 +1,72 @@
+// swift-tools-version: 6.0
+import PackageDescription
+
+let swiftSettings: [SwiftSetting] = [
+    .enableUpcomingFeature("ExistentialAny"),
+    .enableUpcomingFeature("InternalImportsByDefault"),
+    .enableExperimentalFeature("StrictConcurrency")
+]
+
+let package = Package(
+    name: "swift-solana-kit",
+    platforms: [.macOS(.v14), .iOS(.v17)],
+    products: [
+        .library(name: "Kit", targets: ["Kit"]),
+        .library(name: "SolanaErrors", targets: ["SolanaErrors"]),
+        .library(name: "CodecsCore", targets: ["CodecsCore"]),
+        .library(name: "Rpc", targets: ["Rpc"]),
+        .library(name: "RpcGraphql", targets: ["RpcGraphql"])
+    ],
+    dependencies: [],
+    targets: [
+        .target(name: "SolanaErrors", dependencies: [], swiftSettings: swiftSettings),
+        .target(name: "Assertions", dependencies: ["SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "NominalTypes", dependencies: [], swiftSettings: swiftSettings),
+        .target(name: "CodecsCore", dependencies: ["SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "CodecsNumbers", dependencies: ["CodecsCore", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "CodecsStrings", dependencies: ["CodecsCore", "CodecsNumbers", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "CodecsDataStructures", dependencies: ["CodecsCore", "CodecsNumbers", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "FixedPoints", dependencies: ["CodecsCore", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "Options", dependencies: ["CodecsCore", "CodecsDataStructures", "CodecsNumbers", "CodecsStrings", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "Codecs", dependencies: ["CodecsCore", "CodecsDataStructures", "CodecsNumbers", "CodecsStrings", "FixedPoints", "Options"], swiftSettings: swiftSettings),
+        .target(name: "FastStableStringify", dependencies: [], swiftSettings: swiftSettings),
+        .target(name: "Functional", dependencies: [], swiftSettings: swiftSettings),
+        .target(name: "Promises", dependencies: [], swiftSettings: swiftSettings),
+        .target(name: "CryptoBackend", dependencies: ["SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "CryptoKitBackend", dependencies: ["CryptoBackend", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "Curve25519Math", dependencies: ["CryptoBackend", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "Addresses", dependencies: ["Assertions", "CodecsCore", "CodecsStrings", "CryptoBackend", "NominalTypes", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "Keys", dependencies: ["Assertions", "CodecsCore", "CodecsStrings", "CryptoBackend", "NominalTypes", "Promises", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "Instructions", dependencies: ["CodecsCore", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "RpcSpecTypes", dependencies: ["SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "RpcSpec", dependencies: ["RpcSpecTypes", "SolanaErrors", "Subscribable"], swiftSettings: swiftSettings),
+        .target(name: "RpcTypes", dependencies: ["Addresses", "CodecsCore", "CodecsNumbers", "CodecsStrings", "FixedPoints", "NominalTypes", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "RpcTransformers", dependencies: ["Functional", "NominalTypes", "RpcSpecTypes", "RpcTypes", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "RpcTransportHttp", dependencies: ["RpcSpec", "RpcSpecTypes", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "RpcParsedTypes", dependencies: ["Addresses", "RpcTypes"], swiftSettings: swiftSettings),
+        .target(name: "Accounts", dependencies: ["Addresses", "CodecsCore", "CodecsStrings", "RpcSpec", "RpcTypes", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "TransactionMessages", dependencies: ["Addresses", "CodecsCore", "CodecsDataStructures", "CodecsNumbers", "Functional", "Instructions", "NominalTypes", "RpcTypes", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "Transactions", dependencies: ["Addresses", "CodecsCore", "CodecsDataStructures", "CodecsNumbers", "CodecsStrings", "Functional", "Instructions", "Keys", "NominalTypes", "RpcTypes", "SolanaErrors", "TransactionMessages"], swiftSettings: swiftSettings),
+        .target(name: "OffchainMessages", dependencies: ["Addresses", "CodecsCore", "CodecsDataStructures", "CodecsNumbers", "CodecsStrings", "Keys", "NominalTypes", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "Signers", dependencies: ["Addresses", "CodecsCore", "Instructions", "Keys", "NominalTypes", "OffchainMessages", "SolanaErrors", "TransactionMessages", "Transactions"], swiftSettings: swiftSettings),
+        .target(name: "WalletAccountSigner", dependencies: ["Addresses", "CodecsCore", "Keys", "Promises", "Signers", "TransactionMessages", "Transactions"], swiftSettings: swiftSettings),
+        .target(name: "RpcApi", dependencies: ["Addresses", "CodecsCore", "CodecsStrings", "Keys", "RpcParsedTypes", "RpcSpec", "RpcTransformers", "RpcTypes", "SolanaErrors", "TransactionMessages", "Transactions"], swiftSettings: swiftSettings),
+        .target(name: "Rpc", dependencies: ["FastStableStringify", "Functional", "RpcApi", "RpcSpec", "RpcSpecTypes", "RpcTransformers", "RpcTransportHttp", "RpcTypes", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "Subscribable", dependencies: ["Promises", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "RpcSubscriptionsSpec", dependencies: ["Promises", "RpcSpecTypes", "SolanaErrors", "Subscribable"], swiftSettings: swiftSettings),
+        .target(name: "RpcSubscriptionsChannelWebsocket", dependencies: ["Functional", "RpcSubscriptionsSpec", "SolanaErrors", "Subscribable"], swiftSettings: swiftSettings),
+        .target(name: "RpcSubscriptionsApi", dependencies: ["Addresses", "Keys", "RpcSubscriptionsSpec", "RpcTransformers", "RpcTypes", "TransactionMessages", "Transactions"], swiftSettings: swiftSettings),
+        .target(name: "RpcSubscriptions", dependencies: ["FastStableStringify", "Functional", "Promises", "RpcSpecTypes", "RpcSubscriptionsApi", "RpcSubscriptionsChannelWebsocket", "RpcSubscriptionsSpec", "RpcTransformers", "RpcTypes", "SolanaErrors", "Subscribable"], swiftSettings: swiftSettings),
+        .target(name: "TransactionConfirmation", dependencies: ["Addresses", "CodecsStrings", "Keys", "Promises", "Rpc", "RpcSubscriptions", "RpcTypes", "SolanaErrors", "TransactionMessages", "Transactions"], swiftSettings: swiftSettings),
+        .target(name: "Sysvars", dependencies: ["Accounts", "CodecsCore", "CodecsDataStructures", "CodecsNumbers", "RpcTypes", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "InstructionPlans", dependencies: ["Instructions", "Keys", "Promises", "SolanaErrors", "TransactionMessages", "Transactions"], swiftSettings: swiftSettings),
+        .target(name: "PluginCore", dependencies: [], swiftSettings: swiftSettings),
+        .target(name: "PluginInterfaces", dependencies: ["Addresses", "InstructionPlans", "Keys", "RpcSpec", "RpcSubscriptionsSpec", "RpcTypes", "Signers"], swiftSettings: swiftSettings),
+        .target(name: "ProgramClientCore", dependencies: ["Accounts", "Addresses", "CodecsCore", "InstructionPlans", "Instructions", "PluginInterfaces", "RpcApi", "Signers", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "Programs", dependencies: ["Addresses", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "RpcGraphql", dependencies: ["CodecsStrings", "FastStableStringify"], swiftSettings: swiftSettings),
+        .target(name: "Kit", dependencies: ["Accounts", "Addresses", "Codecs", "Functional", "InstructionPlans", "Instructions", "Keys", "OffchainMessages", "PluginCore", "PluginInterfaces", "ProgramClientCore", "Programs", "Rpc", "RpcApi", "RpcParsedTypes", "RpcSpecTypes", "RpcSubscriptions", "RpcTypes", "Signers", "Subscribable", "Sysvars", "TransactionConfirmation", "TransactionMessages", "Transactions", "SolanaErrors"], swiftSettings: swiftSettings),
+        .testTarget(name: "OracleSmokeTests", dependencies: ["Kit"]),
+        .testTarget(name: "OracleFullTests", dependencies: ["Kit"])
+    ]
+)
