@@ -74,7 +74,7 @@ let package = Package(
         .testTarget(name: "Curve25519MathTests", dependencies: ["Curve25519Math", "SolanaErrors"], swiftSettings: swiftSettings),
         .testTarget(name: "CryptoKitBackendTests", dependencies: ["CryptoBackend", "CryptoKitBackend"], swiftSettings: swiftSettings),
         .testTarget(name: "KeysTests", dependencies: ["CryptoBackend", "CryptoKitBackend", "Keys", "SolanaErrors"], swiftSettings: swiftSettings),
-        .testTarget(name: "OracleSmokeTests", dependencies: ["Kit"]),
-        .testTarget(name: "OracleFullTests", dependencies: ["Kit"])
+        .testTarget(name: "OracleSmokeTests", dependencies: ["CodecsCore", "CryptoBackend", "CryptoKitBackend", "Curve25519Math", "Keys", "Kit", "SolanaErrors"], swiftSettings: swiftSettings),
+        .testTarget(name: "OracleFullTests", dependencies: ["CodecsCore", "CryptoBackend", "CryptoKitBackend", "Curve25519Math", "Keys", "Kit", "SolanaErrors"], swiftSettings: swiftSettings)
     ]
 )

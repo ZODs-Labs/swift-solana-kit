@@ -1,0 +1,242 @@
+{
+  "cases": [
+    {
+      "expectedHex": "010203040506070809",
+      "id": "merge-bytes.three-arrays",
+      "inputHex": [
+        "010203",
+        "0405",
+        "06070809"
+      ],
+      "operation": "mergeBytes"
+    },
+    {
+      "expectedHex": "0102030000",
+      "id": "pad-bytes.pad-to-five",
+      "inputHex": "010203",
+      "length": 5,
+      "operation": "padBytes"
+    },
+    {
+      "expectedHex": "010203",
+      "id": "pad-bytes.no-truncate",
+      "inputHex": "010203",
+      "length": 2,
+      "operation": "padBytes"
+    },
+    {
+      "expectedHex": "0102030000",
+      "id": "fix-bytes.pad-to-five",
+      "inputHex": "010203",
+      "length": 5,
+      "operation": "fixBytes"
+    },
+    {
+      "expectedHex": "0102",
+      "id": "fix-bytes.truncate-to-two",
+      "inputHex": "010203",
+      "length": 2,
+      "operation": "fixBytes"
+    },
+    {
+      "expectedHex": "0102",
+      "id": "fix-bytes.negative-length",
+      "inputHex": "010203",
+      "length": -1,
+      "operation": "fixBytes"
+    },
+    {
+      "bytesHex": "09090909",
+      "expectedHex": "09090302",
+      "expectedOffset": 4,
+      "id": "reverse-codec.encoder-write-caller-offset",
+      "offset": 2,
+      "operation": "reverseEncoderWrite"
+    },
+    {
+      "expectedHex": "0201",
+      "expectedOffset": 11,
+      "id": "reverse-codec.decoder-read-caller-offset",
+      "inputHex": "00010203",
+      "offset": 1,
+      "operation": "reverseDecoderRead"
+    },
+    {
+      "expectedBool": true,
+      "id": "bytes-equal.equal",
+      "leftHex": "010203",
+      "operation": "bytesEqual",
+      "rightHex": "010203"
+    },
+    {
+      "expectedBool": false,
+      "id": "bytes-equal.different-byte",
+      "leftHex": "010203",
+      "operation": "bytesEqual",
+      "rightHex": "010204"
+    },
+    {
+      "dataHex": "01020304",
+      "expectedBool": true,
+      "id": "contains-bytes.full-at-zero",
+      "needleHex": "01020304",
+      "offset": 0,
+      "operation": "containsBytes"
+    },
+    {
+      "dataHex": "01020304",
+      "expectedBool": true,
+      "id": "contains-bytes.middle-at-one",
+      "needleHex": "0203",
+      "offset": 1,
+      "operation": "containsBytes"
+    },
+    {
+      "dataHex": "01020304",
+      "expectedBool": false,
+      "id": "contains-bytes.false-at-two",
+      "needleHex": "0102",
+      "offset": 2,
+      "operation": "containsBytes"
+    },
+    {
+      "dataHex": "010203",
+      "expectedBool": true,
+      "id": "contains-bytes.negative-byte-length",
+      "needleHex": "010203",
+      "offset": -3,
+      "operation": "containsBytes"
+    },
+    {
+      "dataHex": "010203",
+      "expectedBool": true,
+      "id": "contains-bytes.negative-greater-than-byte-length",
+      "needleHex": "010203",
+      "offset": -4,
+      "operation": "containsBytes"
+    },
+    {
+      "dataHex": "01020304",
+      "expectedBool": false,
+      "id": "contains-bytes.negative-beyond-byte-length-partial",
+      "needleHex": "0102",
+      "offset": -5,
+      "operation": "containsBytes"
+    },
+    {
+      "expectedHex": "0203",
+      "id": "array-buffers.offset-one-default-length",
+      "inputHex": "010203",
+      "offset": 1,
+      "operation": "toArrayBuffer"
+    },
+    {
+      "expectedHex": "010203",
+      "id": "array-buffers.negative-full-slice",
+      "inputHex": "010203",
+      "length": 3,
+      "offset": -3,
+      "operation": "toArrayBuffer"
+    },
+    {
+      "expectedHex": "68656c6c6f776f726c64ff",
+      "id": "add-codec-sentinel.encode",
+      "operation": "sentinelEncode",
+      "payloadHex": "68656c6c6f776f726c64",
+      "sentinelHex": "ff"
+    },
+    {
+      "expectedValue": "helloworld",
+      "id": "add-codec-sentinel.decode-first-occurrence",
+      "inputHex": "68656c6c6f776f726c64ff0000",
+      "operation": "sentinelDecode",
+      "sentinelHex": "ff"
+    },
+    {
+      "expectedErrorCode": 8078020,
+      "id": "add-codec-sentinel.encode-error",
+      "operation": "sentinelEncodeError",
+      "payloadHex": "68656c6c6f776f726cff",
+      "sentinelHex": "ff"
+    },
+    {
+      "expectedErrorCode": 8078021,
+      "id": "add-codec-sentinel.decode-error",
+      "inputHex": "68656c6c6f776f726c64000000",
+      "operation": "sentinelDecodeError",
+      "sentinelHex": "ff"
+    },
+    {
+      "expectedHex": "08050c0c0f170f120c04",
+      "fixedBytes": 10,
+      "id": "fix-codec-size.same-sized",
+      "operation": "fixCodecSizeEncode",
+      "payloadHex": "08050c0c0f170f120c04"
+    },
+    {
+      "expectedHex": "08050c0c0f",
+      "fixedBytes": 5,
+      "id": "fix-codec-size.truncate",
+      "operation": "fixCodecSizeEncode",
+      "payloadHex": "08050c0c0f170f120c04"
+    },
+    {
+      "expectedHex": "08050c0c0f0000000000",
+      "fixedBytes": 10,
+      "id": "fix-codec-size.pad",
+      "operation": "fixCodecSizeEncode",
+      "payloadHex": "08050c0c0f"
+    },
+    {
+      "expectedErrorCode": 8078001,
+      "fixedBytes": 10,
+      "id": "fix-codec-size.decode-short-error",
+      "inputHex": "08050c0c0f",
+      "operation": "fixCodecSizeDecodeError"
+    },
+    {
+      "expectedErrorCode": 8078001,
+      "id": "add-codec-size-prefix.decode-negative-offset-slice-error",
+      "inputHex": "aabbcc",
+      "length": 2,
+      "offset": -1,
+      "operation": "sizePrefixDecodeError"
+    },
+    {
+      "expectedHex": "023412",
+      "expectedOffset": 3,
+      "id": "add-codec-size-prefix.variable-prefix-fixed-content",
+      "inputHex": "023412ff",
+      "length": 3,
+      "operation": "sizePrefixVariablePrefix"
+    },
+    {
+      "bytesHex": "00010203040506070809",
+      "expectedErrorCode": 8078014,
+      "id": "offset-codec.pre-offset-negative-error",
+      "offset": -1,
+      "operation": "offsetPreError"
+    },
+    {
+      "bytesHex": "0102030405",
+      "decoderConsumes": 4,
+      "expectedErrorCode": 8078023,
+      "id": "decoder-entire-byte-array.excess-error",
+      "operation": "consumeEntireError"
+    }
+  ],
+  "kind": "codecsCore",
+  "pinnedReference": "b4542070c3a092558ee5e716c15f652e826fbc71",
+  "schemaVersion": 1,
+  "upstreamPackage": "@solana/codecs-core",
+  "upstreamSources": [
+    "packages/codecs-core/src/__tests__/bytes-test.ts",
+    "packages/codecs-core/src/__tests__/array-buffers-test.ts",
+    "packages/codecs-core/src/__tests__/add-codec-sentinel-test.ts",
+    "packages/codecs-core/src/__tests__/add-codec-size-prefix-test.ts",
+    "packages/codecs-core/src/__tests__/fix-codec-size-test.ts",
+    "packages/codecs-core/src/__tests__/reverse-codec-test.ts",
+    "packages/codecs-core/src/__tests__/offset-codec-test.ts",
+    "packages/codecs-core/src/__tests__/decoder-entire-byte-array-test.ts"
+  ]
+}

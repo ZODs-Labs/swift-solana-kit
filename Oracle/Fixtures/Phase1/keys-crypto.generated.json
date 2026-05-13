@@ -1,0 +1,116 @@
+{
+  "cases": [
+    {
+      "expectedPublicKeyHex": "1d0e93864dcc815fc3f286180911d00a3fd206de31a1c94287cb43f05fc9f2b5",
+      "id": "create-key-pair-from-private-key-bytes.mock-key",
+      "operation": "createKeyPairFromPrivateKeyBytes",
+      "privateKeyHex": "ebfa65eb93dc79157abadea2f794379dfc071d688687376dc5d5a054121d344a"
+    },
+    {
+      "expectedPrivateKeyHex": "ebfa65eb93dc79157abadea2f794379dfc071d688687376dc5d5a054121d344a",
+      "expectedPublicKeyHex": "1d0e93864dcc815fc3f286180911d00a3fd206de31a1c94287cb43f05fc9f2b5",
+      "id": "create-key-pair-from-bytes.mock-key",
+      "keyPairHex": "ebfa65eb93dc79157abadea2f794379dfc071d688687376dc5d5a054121d344a1d0e93864dcc815fc3f286180911d00a3fd206de31a1c94287cb43f05fc9f2b5",
+      "operation": "createKeyPairFromBytes"
+    },
+    {
+      "expectedErrorCode": 3704000,
+      "id": "create-key-pair-from-bytes.invalid-length",
+      "keyPairHex": "ebfa65eb93dc79157abadea2f794379dfc071d688687376dc5d5a054121d34",
+      "operation": "createKeyPairFromBytesError"
+    },
+    {
+      "expectedErrorCode": 3704004,
+      "id": "create-key-pair-from-bytes.public-key-mismatch",
+      "keyPairHex": "ebfa65eb93dc79157abadea2f794379dfc071d688687376dc5d5a054121d344a1d0e93864dcc815fc3f286180911d00a3fd206de31a1c94287cb43f05fc9f2b1",
+      "operation": "createKeyPairFromBytesError"
+    },
+    {
+      "expectedErrorCode": 3704001,
+      "id": "create-private-key-from-bytes.invalid-length-31",
+      "operation": "createPrivateKeyFromBytesError",
+      "privateKeyHex": "ebfa65eb93dc79157abadea2f794379dfc071d688687376dc5d5a054121d34"
+    },
+    {
+      "expectedPublicKeyHex": "1d0e93864dcc815fc3f286180911d00a3fd206de31a1c94287cb43f05fc9f2b5",
+      "expectedSignatureHex": "426fb8e4efbd7f2e17a875453a8f84a470bdcbe4b7970017b3b5344b70e19680b8a4241565cd731c7fdd1887e50845e810e12ce511ecceae66cf4ffd6007ae0a",
+      "id": "sign-bytes.mock-data",
+      "messageHex": "010203",
+      "operation": "signBytes",
+      "privateKeyHex": "ebfa65eb93dc79157abadea2f794379dfc071d688687376dc5d5a054121d344a"
+    },
+    {
+      "expectedBool": true,
+      "id": "verify-signature.mock-data.true",
+      "messageHex": "010203",
+      "operation": "verifySignature",
+      "publicKeyHex": "1d0e93864dcc815fc3f286180911d00a3fd206de31a1c94287cb43f05fc9f2b5",
+      "signatureHex": "426fb8e4efbd7f2e17a875453a8f84a470bdcbe4b7970017b3b5344b70e19680b8a4241565cd731c7fdd1887e50845e810e12ce511ecceae66cf4ffd6007ae0a"
+    },
+    {
+      "expectedBool": false,
+      "id": "verify-signature.bad-signature.false",
+      "messageHex": "010203",
+      "operation": "verifySignature",
+      "publicKeyHex": "1d0e93864dcc815fc3f286180911d00a3fd206de31a1c94287cb43f05fc9f2b5",
+      "signatureHex": "01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101"
+    },
+    {
+      "expectedErrorCode": 3704002,
+      "id": "signature-bytes.length-63.error",
+      "operation": "signatureBytesError",
+      "signatureHex": "426fb8e4efbd7f2e17a875453a8f84a470bdcbe4b7970017b3b5344b70e19680b8a4241565cd731c7fdd1887e50845e810e12ce511ecceae66cf4ffd6007ae"
+    },
+    {
+      "expectedErrorCode": 3704003,
+      "id": "signature-string.too-short.error",
+      "operation": "signatureStringError",
+      "signature": "short"
+    },
+    {
+      "expectedErrorCode": 8078012,
+      "id": "signature-string.invalid-base58.error",
+      "operation": "signatureStringError",
+      "signature": "1111111111111111111111111111111111111111111111111111111111111110"
+    },
+    {
+      "expectedBool": true,
+      "id": "signature-string.valid.0",
+      "operation": "signatureStringValid",
+      "signature": "1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "expectedBool": true,
+      "id": "signature-string.valid.1",
+      "operation": "signatureStringValid",
+      "signature": "5HkW5GttYoahVHaujuxEyfyq7RwvoKpc94ko5Fq9GuYdyhejg9cHcqm1MjEvHsjaADRe6hVBqB2E4RQgGgxeA2su"
+    },
+    {
+      "expectedBool": true,
+      "id": "signature-string.valid.2",
+      "operation": "signatureStringValid",
+      "signature": "2VZm7DkqSKaHxsGiAuVuSkvEbGWf7JrfRdPTw42WKuJC8qw7yQbGL5AE7UxHH3tprgmT9EVbambnK9h3PLpvMvES"
+    },
+    {
+      "expectedBool": true,
+      "id": "signature-string.valid.3",
+      "operation": "signatureStringValid",
+      "signature": "5sXRtm61WrRGRTjJ6f2anKUWt86Y4V9gWU4WUpue4T4Zh6zuvFoSyaX5LkEtChfqVC8oHdqLo2eUXbhVduThBdfG"
+    },
+    {
+      "expectedBool": true,
+      "id": "signature-string.valid.4",
+      "operation": "signatureStringValid",
+      "signature": "2Dy6Qai5JyChoP4BKoh9KAYhpD96CUhmEce1GJ8HpV5h8Q4CgUt8KZQzhVNDEQYcjARxYyBNhNjhKUGC2XLZtCCm"
+    }
+  ],
+  "kind": "keysCrypto",
+  "pinnedReference": "b4542070c3a092558ee5e716c15f652e826fbc71",
+  "schemaVersion": 1,
+  "upstreamPackage": "@solana/keys",
+  "upstreamSources": [
+    "packages/keys/src/__tests__/key-pair-test.ts",
+    "packages/keys/src/__tests__/private-key-test.ts",
+    "packages/keys/src/__tests__/signatures-test.ts"
+  ]
+}
