@@ -69,6 +69,7 @@ let package = Package(
         .testTarget(name: "SolanaErrorsTests", dependencies: ["SolanaErrors"], swiftSettings: swiftSettings),
         .testTarget(name: "NominalTypesTests", dependencies: ["NominalTypes"], swiftSettings: swiftSettings),
         .testTarget(name: "AssertionsTests", dependencies: ["Assertions", "SolanaErrors"], swiftSettings: swiftSettings),
+        .testTarget(name: "CodecsCoreTests", dependencies: ["CodecsCore", "SolanaErrors"], swiftSettings: swiftSettings),
         .testTarget(name: "OracleSmokeTests", dependencies: ["Kit"]),
         .testTarget(name: "OracleFullTests", dependencies: ["Kit"])
     ]
