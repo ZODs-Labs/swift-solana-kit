@@ -1,18 +1,11 @@
-public import Foundation
-public import SolanaErrors
+import Foundation
+import SolanaErrors
 
 public struct CryptoKeyPairBytes: Sendable, Equatable, Hashable {
     public let privateKey: Data
     public let publicKey: Data
-
-    public init(privateKey: Data, publicKey: Data) {
-        self.privateKey = privateKey
-        self.publicKey = publicKey
-    }
-
-    public var solanaKeyPairBytes: Data {
-        privateKey + publicKey
-    }
+    public init(privateKey: Data, publicKey: Data)
+    public var solanaKeyPairBytes: Data { get }
 }
 
 public protocol CryptoBackend: Sendable {
