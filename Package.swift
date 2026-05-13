@@ -33,7 +33,7 @@ let package = Package(
         .target(name: "Functional", dependencies: [], swiftSettings: swiftSettings),
         .target(name: "Promises", dependencies: [], swiftSettings: swiftSettings),
         .target(name: "CryptoBackend", dependencies: ["SolanaErrors"], swiftSettings: swiftSettings),
-        .target(name: "CryptoKitBackend", dependencies: ["CryptoBackend", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "CryptoKitBackend", dependencies: ["CryptoBackend", "Curve25519Math", "SolanaErrors"], swiftSettings: swiftSettings),
         .target(name: "Curve25519Math", dependencies: ["CryptoBackend", "SolanaErrors"], swiftSettings: swiftSettings),
         .target(name: "Addresses", dependencies: ["Assertions", "CodecsCore", "CodecsStrings", "CryptoBackend", "NominalTypes", "SolanaErrors"], swiftSettings: swiftSettings),
         .target(name: "Keys", dependencies: ["Assertions", "CodecsCore", "CodecsStrings", "CryptoBackend", "NominalTypes", "Promises", "SolanaErrors"], swiftSettings: swiftSettings),
@@ -72,6 +72,7 @@ let package = Package(
         .testTarget(name: "CodecsCoreTests", dependencies: ["CodecsCore", "SolanaErrors"], swiftSettings: swiftSettings),
         .testTarget(name: "CryptoBackendTests", dependencies: ["CryptoBackend"], swiftSettings: swiftSettings),
         .testTarget(name: "Curve25519MathTests", dependencies: ["Curve25519Math", "SolanaErrors"], swiftSettings: swiftSettings),
+        .testTarget(name: "CryptoKitBackendTests", dependencies: ["CryptoBackend", "CryptoKitBackend"], swiftSettings: swiftSettings),
         .testTarget(name: "OracleSmokeTests", dependencies: ["Kit"]),
         .testTarget(name: "OracleFullTests", dependencies: ["Kit"])
     ]
