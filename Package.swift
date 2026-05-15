@@ -44,7 +44,7 @@ let package = Package(
         .target(name: "RpcTransformers", dependencies: ["Functional", "NominalTypes", "RpcSpecTypes", "RpcTypes", "SolanaErrors"], swiftSettings: swiftSettings),
         .target(name: "RpcTransportHttp", dependencies: ["Promises", "RpcSpec", "RpcSpecTypes", "SolanaErrors"], swiftSettings: swiftSettings),
         .target(name: "RpcParsedTypes", dependencies: ["Addresses", "RpcTypes"], swiftSettings: swiftSettings),
-        .target(name: "Accounts", dependencies: ["Addresses", "CodecsCore", "CodecsStrings", "RpcSpec", "RpcTypes", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "Accounts", dependencies: ["Addresses", "CodecsCore", "CodecsStrings", "Promises", "RpcSpec", "RpcTypes", "SolanaErrors"], swiftSettings: swiftSettings),
         .target(name: "TransactionMessages", dependencies: ["Addresses", "CodecsCore", "CodecsDataStructures", "CodecsNumbers", "Functional", "Instructions", "NominalTypes", "RpcTypes", "SolanaErrors"], swiftSettings: swiftSettings),
         .target(name: "Transactions", dependencies: ["Addresses", "CodecsCore", "CodecsDataStructures", "CodecsNumbers", "CodecsStrings", "CryptoBackend", "Functional", "Instructions", "Keys", "NominalTypes", "RpcTypes", "SolanaErrors", "TransactionMessages"], swiftSettings: swiftSettings),
         .target(name: "OffchainMessages", dependencies: ["Addresses", "CodecsCore", "CodecsDataStructures", "CodecsNumbers", "CodecsStrings", "CryptoBackend", "Keys", "NominalTypes", "SolanaErrors"], swiftSettings: swiftSettings),

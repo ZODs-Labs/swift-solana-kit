@@ -1,0 +1,12 @@
+public import Foundation
+
+public let sysvarClockAddress = "SysvarC1ock11111111111111111111111111111111"
+public let sysvarEpochRewardsAddress = "SysvarEpochRewards1111111111111111111111111"
+public let sysvarEpochScheduleAddress = "SysvarEpochSchedu1e111111111111111111111111"
+public let sysvarInstructionsAddress = "Sysvar1nstructions1111111111111111111111111"
+public let sysvarLastRestartSlotAddress = "SysvarLastRestartS1ot1111111111111111111111"
+public let sysvarRecentBlockhashesAddress = "SysvarRecentB1ockHashes11111111111111111111"
+public let sysvarRentAddress = "SysvarRent111111111111111111111111111111111"
+public let sysvarSlotHashesAddress = "SysvarS1otHashes111111111111111111111111111"
+public let sysvarSlotHistoryAddress = "SysvarS1otHistory11111111111111111111111111"
+public let sysvarStakeHistoryAddress = "SysvarStakeHistory1111111111111111111111111"
