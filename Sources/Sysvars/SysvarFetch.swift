@@ -1,6 +1,5 @@
 public import Accounts
 public import Addresses
-public import Foundation
 public import RpcSpec
 
 public func fetchEncodedSysvarAccount(
