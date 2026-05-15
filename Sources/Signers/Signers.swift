@@ -257,6 +257,7 @@ public struct TransactionSigner: Sendable {
     }
 }
 
+/// A signer backed by an in-memory Ed25519 key pair.
 public struct KeyPairSigner: Sendable {
     public let address: Address
     public let keyPair: KeyPair
@@ -593,6 +594,7 @@ public func isKeyPairSigner(_: KeyPairSigner) -> Bool {
 
 public func assertIsKeyPairSigner(_: KeyPairSigner) throws(SolanaError) {}
 
+/// Creates a key pair signer and derives its address from the public key.
 public func createSignerFromKeyPair(
     _ keyPair: KeyPair,
     using backend: any CryptoBackend,
@@ -602,6 +604,7 @@ public func createSignerFromKeyPair(
     return KeyPairSigner(address: address, keyPair: keyPair, identity: identity, backend: backend)
 }
 
+/// Generates a new key pair and wraps it as a signer.
 public func generateKeyPairSigner(using backend: any CryptoBackend, identity: SignerIdentity = .unique()) throws -> KeyPairSigner {
     try createSignerFromKeyPair(generateKeyPair(using: backend), using: backend, identity: identity)
 }

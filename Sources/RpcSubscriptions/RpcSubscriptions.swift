@@ -638,6 +638,7 @@ public func createDefaultRpcSubscriptionsTransport(
     )
 }
 
+/// Creates a subscription client from a caller-supplied transport.
 public func createSolanaRpcSubscriptionsFromTransport(_ transport: @escaping RpcSubscriptionsTransport) -> RpcSubscriptions {
     createSubscriptionRpc(
         RpcSubscriptionsConfig(
@@ -647,6 +648,7 @@ public func createSolanaRpcSubscriptionsFromTransport(_ transport: @escaping Rpc
     )
 }
 
+/// Creates a subscription client for a Solana websocket endpoint.
 public func createSolanaRpcSubscriptions(_ clusterUrl: ClusterUrl, config: DefaultRpcSubscriptionsChannelConfig?) throws -> RpcSubscriptions {
     let channelConfig = defaultRpcSubscriptionsChannelConfig(clusterUrl: clusterUrl, config: config)
     let transport = createDefaultRpcSubscriptionsTransport(
@@ -671,6 +673,7 @@ func defaultRpcSubscriptionsChannelConfig(
     )
 }
 
+/// Creates a subscription client with default channel settings.
 public func createSolanaRpcSubscriptions(_ clusterUrl: ClusterUrl) throws -> RpcSubscriptions {
     try createSolanaRpcSubscriptions(clusterUrl, config: nil)
 }

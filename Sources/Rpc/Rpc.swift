@@ -25,6 +25,7 @@ public struct DefaultRpcTransportConfig: Sendable {
     }
 }
 
+/// A Solana JSON-RPC client backed by a request planner and transport.
 public struct SolanaRpc: Sendable {
     private let api: SolanaRpcApi
     private let transport: RpcTransport
@@ -34,6 +35,7 @@ public struct SolanaRpc: Sendable {
         self.transport = transport
     }
 
+    /// Creates a request for a Solana JSON-RPC method.
     public func request(_ methodName: String, params: [RpcJsonValue]) throws -> PendingRpcRequest {
         PendingRpcRequest(plan: try api.plan(methodName: methodName, params: params), transport: transport)
     }
@@ -146,10 +148,12 @@ func defaultRpcTransportHeaders(_ headers: [String: String]) -> [String: String]
     return normalized
 }
 
+/// Creates a Solana RPC client using the default HTTP transport.
 public func createSolanaRpc(_ clusterUrl: URL, headers: [String: String] = [:]) throws -> SolanaRpc {
     try createSolanaRpcFromTransport(createDefaultRpcTransport(DefaultRpcTransportConfig(url: clusterUrl, headers: headers)))
 }
 
+/// Creates a Solana RPC client using a caller-supplied transport.
 public func createSolanaRpcFromTransport(_ transport: @escaping RpcTransport) -> SolanaRpc {
     SolanaRpc(api: createSolanaRpcApi(defaultRpcConfig()), transport: transport)
 }

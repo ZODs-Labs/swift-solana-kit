@@ -412,6 +412,7 @@ public func waitForDurableNonceTransactionConfirmation(_ config: DurableNonceTra
     }
 }
 
+/// Waits until a blockhash-based transaction is confirmed or its lifetime expires.
 public func waitForRecentTransactionConfirmation(_ config: RecentTransactionConfirmationConfig) async throws {
     let signature = try getSignatureFromTransaction(config.transaction)
     guard case let .blockhash(lifetimeConstraint) = config.transaction.lifetimeConstraint else {

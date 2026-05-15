@@ -1,0 +1,10 @@
+version: 1
+builder:
+  configs:
+    - documentation_targets:
+        - Kit
+        - Rpc
+        - RpcGraphql
+        - CodecsCore
+        - SolanaErrors
+        - ProgramClientCore

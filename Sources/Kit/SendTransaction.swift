@@ -73,6 +73,7 @@ public func sendTransactionWithoutConfirmingFactory(
     }
 }
 
+/// Creates a helper that sends a blockhash-based transaction and waits for confirmation.
 public func sendAndConfirmTransactionFactory(
     _ config: SendAndConfirmTransactionFactoryConfig
 ) -> SendAndConfirmTransactionFunction {

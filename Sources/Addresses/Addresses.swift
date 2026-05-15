@@ -14,6 +14,7 @@ private let pdaMarkerBytes = Data([
     100, 114, 101, 115, 115,
 ])
 
+/// A validated base58 Solana address.
 public struct Address: Sendable, Equatable, Hashable, Comparable, Codable, CustomStringConvertible {
     public let rawValue: String
 
@@ -111,6 +112,7 @@ public struct OffCurveAddress: Sendable, Equatable, Hashable, CustomStringConver
     }
 }
 
+/// A seed used when deriving a program address.
 public enum ProgramDerivedAddressSeed: Sendable, Equatable {
     case bytes(Data)
     case utf8(String)
@@ -148,6 +150,7 @@ public struct ProgramDerivedAddressBump: Sendable, Equatable, Hashable, Comparab
     }
 }
 
+/// A program derived address with the bump seed that made it off curve.
 public struct ProgramDerivedAddress: Sendable, Equatable, Hashable, Codable {
     public let address: Address
     public let bump: ProgramDerivedAddressBump
@@ -185,6 +188,7 @@ public func isAddress(_ putativeAddress: String) -> Bool {
     }
 }
 
+/// Validates a base58 string and returns it as an `Address`.
 public func address(_ putativeAddress: String) throws(AddressValidationError) -> Address {
     try Address(putativeAddress)
 }
@@ -258,6 +262,7 @@ public func assertIsProgramDerivedAddress(_ value: ProgramDerivedAddress) throws
     }
 }
 
+/// Derives an off-curve program address for the supplied seeds.
 public func getProgramDerivedAddress(
     programAddress: Address,
     seeds: [ProgramDerivedAddressSeed],
