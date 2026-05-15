@@ -3,12 +3,12 @@ import Foundation
 import SolanaErrors
 
 public enum CryptoKitSigningMode: Sendable, Equatable {
-    case kitDeterministic
+    case deterministic
     case platform
 }
 
 public struct CryptoKitBackend: CryptoBackend {
-    public init(signingMode: CryptoKitSigningMode = .kitDeterministic)
+    public init(signingMode: CryptoKitSigningMode = .deterministic)
     public func generateKeyPair() throws(KeysError) -> CryptoKeyPairBytes
     public func createKeyPair(privateKeyBytes: Data) throws(KeysError) -> CryptoKeyPairBytes
     public func createKeyPair(solanaKeyPairBytes: Data) throws(KeysError) -> CryptoKeyPairBytes

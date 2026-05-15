@@ -17,7 +17,7 @@ final class CryptoKitBackendTests: XCTestCase {
         XCTAssertTrue(try backend.verify(signature: signature, message: Data(), publicKeyBytes: expectedPublicKey))
     }
 
-    func testReferenceSigningVector() throws {
+    func testKnownSigningVector() throws {
         let backend = CryptoKitBackend()
         let seed = Data(hex: "ebfa65eb93dc79157abadea2f794379dfc071d688687376dc5d5a054121d344a")
         let message = Data([1, 2, 3])
@@ -33,7 +33,7 @@ final class CryptoKitBackendTests: XCTestCase {
         XCTAssertFalse(try backend.verify(signature: Data(repeating: 1, count: 64), message: message, publicKeyBytes: expectedPublicKey))
     }
 
-    func testDefaultSigningModeIsDeterministicAndReferenceCompatible() throws {
+    func testDefaultSigningModeIsDeterministicAndStable() throws {
         let backend = CryptoKitBackend()
         let seed = Data(hex: "ebfa65eb93dc79157abadea2f794379dfc071d688687376dc5d5a054121d344a")
         let message = Data([1, 2, 3])

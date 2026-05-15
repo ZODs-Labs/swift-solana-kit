@@ -27,11 +27,10 @@ package func ed25519PublicKey(seed: Data) throws(KeysError) -> Data {
     return EdwardsPoint.basepoint.multiplied(by: Ed25519Scalar.clampedScalarBytes(seed: seed)).compressed()
 }
 
-// This path exists to preserve byte-for-byte parity with the deterministic RFC 8032
-// signatures produced by kit/WebCrypto. It handles long-term secret scalars in Swift.
-// Do not treat it as a constant-time replacement for the platform signer. Apple's
-// CryptoKit signer is hardened by the platform and randomizes Ed25519 output, so
-// consumers that prefer that posture over deterministic oracle bytes should select
+// This path implements deterministic RFC 8032 signing and handles long-term secret
+// scalars in Swift. Do not treat it as a constant-time replacement for the platform
+// signer. Apple's CryptoKit signer is hardened by the platform and randomizes
+// Ed25519 output, so consumers that prefer that posture should select
 // CryptoKitBackend(signingMode: .platform).
 package func ed25519DeterministicSignature(
     message: Data,

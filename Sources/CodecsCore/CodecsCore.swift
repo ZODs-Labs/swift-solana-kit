@@ -1193,6 +1193,8 @@ func castCodecsError<T>(_ body: () throws -> T) throws(CodecsError) -> T {
         return try body()
     } catch let error as CodecsError {
         throw error
+    } catch let error as SolanaError {
+        throw CodecsError.wrappedSolanaError(code: error.code, context: error.context)
     } catch {
         throw CodecsError.invalidPatternMatchValue
     }

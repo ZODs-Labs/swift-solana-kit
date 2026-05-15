@@ -9,13 +9,13 @@ final class CodecsCoreTests: XCTestCase {
         XCTAssertEqual(try codec.decode(Data([0x34, 0x12]), at: 0), 0x1234)
     }
 
-    func testAssertionsUseUpstreamCodecErrorCodes() {
+    func testAssertionsUseStableCodecErrorCodes() {
         XCTAssertThrowsError(try assertByteArrayHasEnoughBytesForCodec("u16", expected: 2, bytes: Data([0x01]))) { error in
             XCTAssertEqual((error as? CodecsError)?.code, SolanaErrorCode.codecsInvalidByteLength.rawValue)
         }
     }
 
-    func testOffsetEncoderMatchesUpstreamPreOffsetSemantics() throws {
+    func testOffsetEncoderAppliesPreOffsetBeforeWrite() throws {
         let encoder = offsetEncoder(makeU16Codec(), config: OffsetConfig(preOffset: { $0.preOffset + 2 }))
         var bytes = Data(repeating: 0, count: 4)
         let nextOffset = try encoder.write(0x1234, into: &bytes, at: 0)
@@ -33,7 +33,7 @@ final class CodecsCoreTests: XCTestCase {
         XCTAssertEqual(try fixed.encode(Data([0x01, 0x02, 0x03, 0x04, 0x05])), Data([0x01, 0x02, 0x03, 0x04]))
     }
 
-    func testFixBytesUsesReferenceSliceSemanticsForNegativeLengths() {
+    func testFixBytesUsesExpectedSliceSemanticsForNegativeLengths() {
         XCTAssertEqual(fixBytes(Data([0x01, 0x02, 0x03]), length: -1), Data([0x01, 0x02]))
     }
 

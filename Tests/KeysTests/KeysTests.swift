@@ -32,7 +32,7 @@ final class KeysTests: XCTestCase {
         }
     }
 
-    func testSignatureValidationMatchesUpstreamLengthRules() throws {
+    func testSignatureValidationEnforcesLengthRules() throws {
         XCTAssertThrowsError(try assertIsSignature("short")) { error in
             let validationError = error as? SignatureValidationError
             XCTAssertEqual(validationError?.code, SolanaErrorCode.keysSignatureStringLengthOutOfRange.rawValue)

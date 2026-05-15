@@ -8,7 +8,7 @@ final class SolanaErrorsTests: XCTestCase {
         XCTAssertEqual(SolanaErrorCode.walletSignerNotAvailable.rawValue, 8_900_002)
     }
 
-    func testUpstreamNumericCodesAreStable() {
+    func testNumericCodesAreStable() {
         XCTAssertEqual(SolanaErrorCode.jsonRPCParseError.rawValue, -32700)
         XCTAssertEqual(SolanaErrorCode.keysInvalidPrivateKeyByteLength.rawValue, 3_704_001)
         XCTAssertEqual(SolanaErrorCode.codecsOffsetOutOfRange.rawValue, 8_078_014)
@@ -19,6 +19,20 @@ final class SolanaErrorsTests: XCTestCase {
         XCTAssertEqual(error.code, 3_704_001)
         XCTAssertEqual(error.contextDescription, "actualLength=31")
         XCTAssertTrue(error.localizedDescription.contains("31"))
+    }
+
+    func testContextLiteralUsesLastDuplicateKey() {
+        let context: SolanaErrorContext = ["value": .string("first"), "value": .string("second")]
+
+        XCTAssertEqual(context.values.count, 1)
+        XCTAssertEqual(context["value"], .string("second"))
+    }
+
+    func testContextBigintRendersAsDecimalString() {
+        let context: SolanaErrorContext = ["slot": .bigint("9007199254740993")]
+
+        XCTAssertEqual(context.renderedDescription, "slot=9007199254740993")
+        XCTAssertEqual(render(format: "slot $slot", context: context), "slot 9007199254740993")
     }
 
     func testSignedJsonRpcCodesRoundTripThroughGenericSolanaError() {

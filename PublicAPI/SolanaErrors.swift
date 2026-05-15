@@ -5,6 +5,10 @@ public protocol SolanaErrorCoded: Error, Sendable {
     var contextDescription: String { get }
 }
 
+public extension SolanaErrorCoded {
+    var contextDescription: String { get }
+}
+
 public struct SolanaErrorCode: RawRepresentable, Sendable, Hashable, Codable, ExpressibleByIntegerLiteral {
     public let rawValue: Int
     public init(rawValue: Int)
@@ -322,14 +326,18 @@ public extension SolanaErrorCode {
     static let invariantViolationInvalidTransactionPlanKind: Self
 }
 
-public enum SolanaErrorContextValue: Sendable, Equatable, Codable, CustomStringConvertible {
+public indirect enum SolanaErrorContextValue: Sendable, Equatable, Codable, CustomStringConvertible {
+    case null
     case string(String)
     case int(Int)
     case uint(UInt64)
+    case bigint(String)
     case bool(Bool)
     case bytes(Data)
     case stringArray([String])
     case intArray([Int])
+    case array([SolanaErrorContextValue])
+    case object([String: SolanaErrorContextValue])
     public var description: String {
         get
     }
@@ -403,6 +411,7 @@ public enum CodecsError: SolanaErrorCoded, Sendable, Equatable, LocalizedError, 
     case expectedDecoderToConsumeEntireByteArray(expectedLength: Int, numExcessBytes: Int)
     case invalidPatternMatchBytes
     case invalidPatternMatchValue
+    case wrappedSolanaError(code: Int, context: SolanaErrorContext)
     public var code: Int {
         get
     }
@@ -649,8 +658,8 @@ public enum TransactionError: SolanaErrorCoded, Sendable, Equatable, LocalizedEr
 public enum RpcError: SolanaErrorCoded, Sendable, Equatable, LocalizedError, CustomNSError {
     case jsonRPC(code: Int, message: String)
     case integerOverflow
-    case transportHTTPHeaderForbidden(headerName: String)
-    case transportHTTPError(statusCode: Int, message: String)
+    case transportHTTPHeaderForbidden(headers: [String])
+    case transportHTTPError(statusCode: Int, message: String, headers: [String: String])
     case apiPlanMissingForRPCMethod(method: String)
     public var code: Int {
         get

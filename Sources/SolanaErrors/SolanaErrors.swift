@@ -17,23 +17,31 @@ public struct SolanaErrorCode: RawRepresentable, Sendable, Hashable, Codable, Ex
     }
 }
 
-public enum SolanaErrorContextValue: Sendable, Equatable, Codable, CustomStringConvertible {
+public indirect enum SolanaErrorContextValue: Sendable, Equatable, Codable, CustomStringConvertible {
+    case null
     case string(String)
     case int(Int)
     case uint(UInt64)
+    case bigint(String)
     case bool(Bool)
     case bytes(Data)
     case stringArray([String])
     case intArray([Int])
+    case array([SolanaErrorContextValue])
+    case object([String: SolanaErrorContextValue])
 
     public var description: String {
         switch self {
+        case .null:
+            return "null"
         case let .string(value):
             return value
         case let .int(value):
             return String(value)
         case let .uint(value):
             return String(value)
+        case let .bigint(value):
+            return value
         case let .bool(value):
             return String(value)
         case let .bytes(value):
@@ -42,6 +50,10 @@ public enum SolanaErrorContextValue: Sendable, Equatable, Codable, CustomStringC
             return value.joined(separator: ",")
         case let .intArray(value):
             return value.map(String.init).joined(separator: ",")
+        case let .array(value):
+            return "[" + value.map(\.description).joined(separator: ",") + "]"
+        case let .object(value):
+            return "{" + value.keys.sorted().map { key in "\(key):\(value[key]?.description ?? "null")" }.joined(separator: ",") + "}"
         }
     }
 }
@@ -60,7 +72,11 @@ public struct SolanaErrorContext: Sendable, Equatable, Codable, ExpressibleByDic
     }
 
     public init(dictionaryLiteral elements: (String, SolanaErrorContextValue)...) {
-        values = Dictionary(uniqueKeysWithValues: elements)
+        var out: [String: SolanaErrorContextValue] = [:]
+        for (key, value) in elements {
+            out[key] = value
+        }
+        values = out
     }
 
     public subscript(_ key: String) -> SolanaErrorContextValue? {
@@ -143,6 +159,7 @@ public enum CodecsError: SolanaErrorCoded, Sendable, Equatable, LocalizedError, 
     case expectedDecoderToConsumeEntireByteArray(expectedLength: Int, numExcessBytes: Int)
     case invalidPatternMatchBytes
     case invalidPatternMatchValue
+    case wrappedSolanaError(code: Int, context: SolanaErrorContext)
 
     public var code: Int {
         switch self {
@@ -198,6 +215,8 @@ public enum CodecsError: SolanaErrorCoded, Sendable, Equatable, LocalizedError, 
             return SolanaErrorCode.codecsInvalidPatternMatchBytes.rawValue
         case .invalidPatternMatchValue:
             return SolanaErrorCode.codecsInvalidPatternMatchValue.rawValue
+        case let .wrappedSolanaError(code, _):
+            return code
         }
     }
 
@@ -214,6 +233,8 @@ public enum CodecsError: SolanaErrorCoded, Sendable, Equatable, LocalizedError, 
         case .expectedFixedLength, .expectedVariableLength, .encoderDecoderSizeCompatibilityMismatch,
              .invalidPatternMatchBytes, .invalidPatternMatchValue:
             return .empty
+        case let .wrappedSolanaError(_, context):
+            return context
         case let .encoderDecoderFixedSizeMismatch(encoderFixedSize, decoderFixedSize):
             return ["decoderFixedSize": .int(decoderFixedSize), "encoderFixedSize": .int(encoderFixedSize)]
         case let .encoderDecoderMaxSizeMismatch(encoderMaxSize, decoderMaxSize):
@@ -685,8 +706,8 @@ public enum TransactionError: SolanaErrorCoded, Sendable, Equatable, LocalizedEr
 public enum RpcError: SolanaErrorCoded, Sendable, Equatable, LocalizedError, CustomNSError {
     case jsonRPC(code: Int, message: String)
     case integerOverflow
-    case transportHTTPHeaderForbidden(headerName: String)
-    case transportHTTPError(statusCode: Int, message: String)
+    case transportHTTPHeaderForbidden(headers: [String])
+    case transportHTTPError(statusCode: Int, message: String, headers: [String: String])
     case apiPlanMissingForRPCMethod(method: String)
 
     public var code: Int {
@@ -708,10 +729,14 @@ public enum RpcError: SolanaErrorCoded, Sendable, Equatable, LocalizedError, Cus
         switch self {
         case let .jsonRPC(_, message):
             return ["__serverMessage": .string(message)]
-        case let .transportHTTPHeaderForbidden(headerName):
-            return ["headerName": .string(headerName)]
-        case let .transportHTTPError(statusCode, message):
-            return ["message": .string(message), "statusCode": .int(statusCode)]
+        case let .transportHTTPHeaderForbidden(headers):
+            return ["headers": .stringArray(headers)]
+        case let .transportHTTPError(statusCode, message, headers):
+            return [
+                "headers": .object(headers.mapValues(SolanaErrorContextValue.string)),
+                "message": .string(message),
+                "statusCode": .int(statusCode),
+            ]
         case let .apiPlanMissingForRPCMethod(method):
             return ["method": .string(method)]
         case .integerOverflow:

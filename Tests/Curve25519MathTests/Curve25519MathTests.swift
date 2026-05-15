@@ -18,7 +18,7 @@ final class Curve25519MathTests: XCTestCase {
         )
     }
 
-    func testDeterministicSignatureMatchesReferenceVectors() throws {
+    func testDeterministicSignatureMatchesKnownVectors() throws {
         let vectors = [
             Ed25519SigningVector(
                 seed: "9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60",

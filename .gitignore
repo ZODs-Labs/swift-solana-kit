@@ -21,7 +21,13 @@ ZODSol.app/
 *.local
 *.env.local
 UPSTREAM_PIN
- 
+
+# Local verification artifacts
+.local-oracle/
+Tests/RpcTests/*.local.swift
+Oracle/generate-*-fixtures.mjs
+Oracle/Fixtures/Foundation/**/*.generated.json
+
 # macOS
 .DS_Store
 

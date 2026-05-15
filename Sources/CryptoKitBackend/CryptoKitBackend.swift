@@ -7,7 +7,7 @@ internal import Curve25519Math
 public struct CryptoKitBackend: CryptoBackend {
     private let signingMode: CryptoKitSigningMode
 
-    public init(signingMode: CryptoKitSigningMode = .kitDeterministic) {
+    public init(signingMode: CryptoKitSigningMode = .deterministic) {
         self.signingMode = signingMode
     }
 
@@ -52,7 +52,7 @@ public struct CryptoKitBackend: CryptoBackend {
     public func sign(_ message: Data, privateKeyBytes: Data) throws(KeysError) -> Data {
         let privateKey = try makePrivateKey(from: privateKeyBytes)
         switch signingMode {
-        case .kitDeterministic:
+        case .deterministic:
             return try ed25519DeterministicSignature(
                 message: message,
                 privateKeySeed: privateKeyBytes,
