@@ -1,8 +1,7 @@
 public import Addresses
-public import Foundation
 public import Promises
 public import RpcSpec
-public import RpcSpecTypes
+import RpcSpecTypes
 public import RpcTypes
 import SolanaErrors
 
