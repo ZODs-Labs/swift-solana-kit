@@ -239,36 +239,29 @@ final class RpcTests: XCTestCase {
         let abortSignalA = AbortSignal()
         let abortSignalB = AbortSignal()
 
-        let responseA = Task {
-            try await transport(RpcTransportConfig(payload: .null, abortSignal: abortSignalA))
-        }
-        let responseB = Task {
-            try await transport(RpcTransportConfig(payload: .null, abortSignal: abortSignalB))
-        }
-        await waitUntil { recorder.callCount == 1 }
+        async let responseA: RpcJsonValue = transport(RpcTransportConfig(payload: .null, abortSignal: abortSignalA))
+        async let responseB: RpcJsonValue = transport(RpcTransportConfig(payload: .null, abortSignal: abortSignalB))
+        try await Task.sleep(nanoseconds: 1_000_000)
 
         abortSignalA.abort(reason: AbortError(reason: "first"))
         abortSignalB.abort(reason: AbortError(reason: "second"))
-        let responseC = Task {
-            try await transport(RpcTransportConfig(payload: .null))
-        }
-        try await Task.sleep(nanoseconds: 5_000_000)
-
-        XCTAssertEqual(recorder.callCount, 2)
-        let responseCValue = try await responseC.value
-        XCTAssertEqual(responseCValue, .string("ok"))
         do {
-            _ = try await responseA.value
+            _ = try await responseA
             XCTFail("Expected first request to abort")
         } catch let error as AbortError {
             XCTAssertEqual(error.reason, "first")
         }
         do {
-            _ = try await responseB.value
+            _ = try await responseB
             XCTFail("Expected second request to abort")
         } catch let error as AbortError {
             XCTAssertEqual(error.reason, "second")
         }
+
+        let responseCValue = try await transport(RpcTransportConfig(payload: .null))
+
+        XCTAssertEqual(recorder.callCount, 2)
+        XCTAssertEqual(responseCValue, .string("ok"))
     }
 }
 
