@@ -1,8 +1,8 @@
-public import Foundation
+import Foundation
 public import Instructions
-public import SolanaErrors
+import SolanaErrors
 public import TransactionMessages
-public import Transactions
+import Transactions
 import os
 
 public struct SingleInstructionPlan: Sendable {

@@ -1,6 +1,6 @@
 public import Addresses
-public import CodecsStrings
-public import Foundation
+import CodecsStrings
+import Foundation
 public import RpcSpecTypes
 public import RpcTypes
 import SolanaErrors

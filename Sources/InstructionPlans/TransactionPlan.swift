@@ -1,4 +1,4 @@
-public import SolanaErrors
+import SolanaErrors
 public import TransactionMessages
 
 public struct SingleTransactionPlan: Sendable {

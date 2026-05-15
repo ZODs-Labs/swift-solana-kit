@@ -1,8 +1,8 @@
-public import CodecsCore
+import CodecsCore
 import CodecsDataStructures
-public import CodecsNumbers
-public import Foundation
-public import RpcTypes
+import CodecsNumbers
+import Foundation
+import RpcTypes
 import SolanaErrors
 
 let bitvecDiscriminator = 1

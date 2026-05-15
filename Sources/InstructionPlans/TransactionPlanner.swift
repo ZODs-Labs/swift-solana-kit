@@ -1,8 +1,8 @@
-public import Instructions
+import Instructions
 public import Promises
-public import SolanaErrors
+import SolanaErrors
 public import TransactionMessages
-public import Transactions
+import Transactions
 
 public typealias TransactionPlanner = @Sendable (
     _ instructionPlan: InstructionPlan,
