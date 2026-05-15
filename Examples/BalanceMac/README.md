@@ -12,6 +12,10 @@ Apple developers often need a quick desktop check for a public address while bui
 swift build
 ```
 
+## Xcode
+
+Open this folder in Xcode, choose the `BalanceMac` scheme, choose `My Mac` and press `Cmd+R`. The example opens a macOS window from the package executable.
+
 ## Test
 
 ```sh

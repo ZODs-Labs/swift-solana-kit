@@ -1,10 +1,17 @@
-import SwiftUI
+import AppKit
 
 @main
-struct BalanceMacApp: App {
-    var body: some Scene {
-        WindowGroup {
-            BalanceDashboardView()
+struct BalanceMacApp {
+    @MainActor
+    static func main() {
+        let app = NSApplication.shared
+        let delegate = BalanceMacAppDelegate()
+        app.delegate = delegate
+        app.setActivationPolicy(.regular)
+        NSWindow.allowsAutomaticWindowTabbing = false
+        app.activate(ignoringOtherApps: true)
+        withExtendedLifetime(delegate) {
+            app.run()
         }
     }
 }

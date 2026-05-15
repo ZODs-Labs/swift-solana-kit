@@ -14,6 +14,10 @@ swift build
 
 The package includes macOS as a host build platform so command-line validation can run with SwiftPM. Open the package in Xcode and choose an iOS simulator or device to run the app as an iOS example.
 
+## Xcode
+
+Open this folder in Xcode, choose the `AirdropIOS` scheme and choose an iPhone simulator for the iOS flow. You can also choose `My Mac` to run the same screen as a visual host check.
+
 ## Test
 
 ```sh
