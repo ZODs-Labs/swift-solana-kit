@@ -1,5 +1,5 @@
 public import CodecsCore
-public import Foundation
+import Foundation
 import SolanaErrors
 
 public func decodeAccount<D: Decoder>(

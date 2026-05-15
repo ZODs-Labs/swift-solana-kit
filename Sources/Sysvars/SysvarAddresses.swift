@@ -1,5 +1,3 @@
-public import Foundation
-
 public let sysvarClockAddress = "SysvarC1ock11111111111111111111111111111111"
 public let sysvarEpochRewardsAddress = "SysvarEpochRewards1111111111111111111111111"
 public let sysvarEpochScheduleAddress = "SysvarEpochSchedu1e111111111111111111111111"

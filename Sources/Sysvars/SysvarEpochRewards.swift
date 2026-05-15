@@ -1,8 +1,8 @@
 public import Accounts
-public import Addresses
+import Addresses
 public import CodecsCore
 public import CodecsNumbers
-public import Foundation
+import Foundation
 public import RpcSpec
 public import RpcTypes
 
