@@ -323,6 +323,7 @@ final class TransactionConfirmationTests: XCTestCase {
                 },
                 getRecentSignatureConfirmationPromise: { config in
                     await durableRecorder.recordRecent(config)
+                    await durableRecorder.waitUntilNonceRecorded()
                 },
                 transaction: durableTransaction
             )
@@ -348,6 +349,7 @@ final class TransactionConfirmationTests: XCTestCase {
                 },
                 getRecentSignatureConfirmationPromise: { config in
                     await recentRecorder.recordRecent(config)
+                    await recentRecorder.waitUntilBlockHeightRecorded()
                 },
                 transaction: recentTransaction
             )
@@ -582,6 +584,8 @@ private actor SignalStateRecorder {
 
 private actor WaiterRecorder {
     private var storage = WaiterSummary()
+    private var nonceWaiters: [CheckedContinuation<Void, Never>] = []
+    private var blockHeightWaiters: [CheckedContinuation<Void, Never>] = []
 
     var summary: WaiterSummary {
         storage
@@ -590,14 +594,42 @@ private actor WaiterRecorder {
     func recordNonce(_ config: NonceInvalidationConfig) {
         storage.nonceValue = config.currentNonceValue
         storage.nonceAccount = config.nonceAccountAddress
+        resume(&nonceWaiters)
     }
 
     func recordBlockHeight(_ config: BlockHeightExceedenceConfig) {
         storage.lastValidBlockHeight = config.lastValidBlockHeight
+        resume(&blockHeightWaiters)
     }
 
     func recordRecent(_ config: RecentSignatureConfirmationConfig) {
         storage.signature = config.signature
+    }
+
+    func waitUntilNonceRecorded() async {
+        if storage.nonceValue != nil {
+            return
+        }
+        await withCheckedContinuation { continuation in
+            nonceWaiters.append(continuation)
+        }
+    }
+
+    func waitUntilBlockHeightRecorded() async {
+        if storage.lastValidBlockHeight != nil {
+            return
+        }
+        await withCheckedContinuation { continuation in
+            blockHeightWaiters.append(continuation)
+        }
+    }
+
+    private func resume(_ waiters: inout [CheckedContinuation<Void, Never>]) {
+        let continuations = waiters
+        waiters.removeAll(keepingCapacity: false)
+        for continuation in continuations {
+            continuation.resume()
+        }
     }
 }
 
