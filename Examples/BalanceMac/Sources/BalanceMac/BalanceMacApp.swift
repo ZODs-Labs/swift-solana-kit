@@ -8,6 +8,7 @@ struct BalanceMacApp {
         let delegate = BalanceMacAppDelegate()
         app.delegate = delegate
         app.setActivationPolicy(.regular)
+        installAppMenu(appName: "BalanceMac")
         NSWindow.allowsAutomaticWindowTabbing = false
         app.activate(ignoringOtherApps: true)
         withExtendedLifetime(delegate) {

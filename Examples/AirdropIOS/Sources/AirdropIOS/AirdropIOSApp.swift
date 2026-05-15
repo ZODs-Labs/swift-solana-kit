@@ -13,6 +13,7 @@ struct AirdropIOSApp {
         let delegate = AirdropIOSMacAppDelegate()
         app.delegate = delegate
         app.setActivationPolicy(.regular)
+        installAppMenu(appName: "AirdropIOS")
         NSWindow.allowsAutomaticWindowTabbing = false
         app.activate(ignoringOtherApps: true)
         withExtendedLifetime(delegate) {
