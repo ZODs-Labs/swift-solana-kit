@@ -15,7 +15,8 @@ let package = Package(
         .library(name: "SolanaErrors", targets: ["SolanaErrors"]),
         .library(name: "CodecsCore", targets: ["CodecsCore"]),
         .library(name: "Rpc", targets: ["Rpc"]),
-        .library(name: "RpcGraphql", targets: ["RpcGraphql"])
+        .library(name: "RpcGraphql", targets: ["RpcGraphql"]),
+        .library(name: "ProgramClientCore", targets: ["ProgramClientCore"])
     ],
     dependencies: [],
     targets: [
@@ -65,7 +66,7 @@ let package = Package(
         .target(name: "ProgramClientCore", dependencies: ["Accounts", "Addresses", "CodecsCore", "InstructionPlans", "Instructions", "PluginInterfaces", "RpcApi", "Signers", "SolanaErrors"], swiftSettings: swiftSettings),
         .target(name: "Programs", dependencies: ["Addresses", "SolanaErrors"], swiftSettings: swiftSettings),
         .target(name: "RpcGraphql", dependencies: ["CodecsStrings", "FastStableStringify"], swiftSettings: swiftSettings),
-        .target(name: "Kit", dependencies: ["Accounts", "Addresses", "Codecs", "Functional", "InstructionPlans", "Instructions", "Keys", "OffchainMessages", "PluginCore", "PluginInterfaces", "ProgramClientCore", "Programs", "Rpc", "RpcApi", "RpcParsedTypes", "RpcSpecTypes", "RpcSubscriptions", "RpcTypes", "Signers", "Subscribable", "Sysvars", "TransactionConfirmation", "TransactionMessages", "Transactions", "SolanaErrors"], swiftSettings: swiftSettings),
+        .target(name: "Kit", dependencies: ["Accounts", "Addresses", "Codecs", "Functional", "InstructionPlans", "Instructions", "Keys", "OffchainMessages", "PluginCore", "PluginInterfaces", "Programs", "Promises", "Rpc", "RpcApi", "RpcParsedTypes", "RpcSpec", "RpcSpecTypes", "RpcSubscriptions", "RpcSubscriptionsApi", "RpcSubscriptionsSpec", "RpcTypes", "Signers", "SolanaErrors", "Subscribable", "TransactionConfirmation", "TransactionMessages", "Transactions"], swiftSettings: swiftSettings),
         .testTarget(name: "SolanaErrorsTests", dependencies: ["SolanaErrors"], swiftSettings: swiftSettings),
         .testTarget(name: "NominalTypesTests", dependencies: ["NominalTypes"], swiftSettings: swiftSettings),
         .testTarget(name: "AssertionsTests", dependencies: ["Assertions", "SolanaErrors"], swiftSettings: swiftSettings),
@@ -111,6 +112,7 @@ let package = Package(
         .testTarget(name: "OffchainMessagesTests", dependencies: ["Addresses", "CryptoBackend", "Keys", "OffchainMessages", "SolanaErrors"], swiftSettings: swiftSettings),
         .testTarget(name: "SignersTests", dependencies: ["Addresses", "CryptoBackend", "CryptoKitBackend", "Instructions", "Keys", "OffchainMessages", "Promises", "Signers", "SolanaErrors", "TransactionMessages", "Transactions"], swiftSettings: swiftSettings),
         .testTarget(name: "WalletAccountSignerTests", dependencies: ["Addresses", "Keys", "Promises", "Signers", "SolanaErrors", "Transactions", "WalletAccountSigner"], swiftSettings: swiftSettings),
-        .testTarget(name: "KeysTests", dependencies: ["CryptoBackend", "CryptoKitBackend", "Keys", "SolanaErrors"], swiftSettings: swiftSettings)
+        .testTarget(name: "KeysTests", dependencies: ["CryptoBackend", "CryptoKitBackend", "Keys", "SolanaErrors"], swiftSettings: swiftSettings),
+        .testTarget(name: "KitTests", dependencies: ["Kit"], swiftSettings: swiftSettings)
     ]
 )
