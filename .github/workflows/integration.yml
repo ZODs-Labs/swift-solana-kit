@@ -11,4 +11,4 @@ jobs:
         with:
           ref: master
       - run: swift build
-      - run: swift test --filter OracleSmokeTests
+      - run: swift test
