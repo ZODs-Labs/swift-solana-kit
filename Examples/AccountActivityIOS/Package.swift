@@ -8,28 +8,28 @@ let swiftSettings: [SwiftSetting] = [
 ]
 
 let package = Package(
-    name: "AirdropIOS",
+    name: "AccountActivityIOS",
     platforms: [.iOS(.v17), .macOS(.v14)],
     products: [
-        .executable(name: "AirdropIOS", targets: ["AirdropIOS"])
+        .executable(name: "AccountActivityIOS", targets: ["AccountActivityIOS"])
     ],
     dependencies: [
         .package(path: "../..")
     ],
     targets: [
         .target(
-            name: "AirdropIOSCore",
+            name: "AccountActivityIOSCore",
             dependencies: [.product(name: "Kit", package: "swift-solana-kit")],
             swiftSettings: swiftSettings
         ),
         .executableTarget(
-            name: "AirdropIOS",
-            dependencies: ["AirdropIOSCore"],
+            name: "AccountActivityIOS",
+            dependencies: ["AccountActivityIOSCore"],
             swiftSettings: swiftSettings
         ),
         .testTarget(
-            name: "AirdropIOSCoreTests",
-            dependencies: ["AirdropIOSCore"],
+            name: "AccountActivityIOSCoreTests",
+            dependencies: ["AccountActivityIOSCore"],
             swiftSettings: swiftSettings
         )
     ]

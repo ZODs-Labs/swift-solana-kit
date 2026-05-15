@@ -6,14 +6,14 @@ import SwiftUI
 
 #if os(macOS)
 @main
-struct AirdropIOSApp {
+struct AccountActivityIOSApp {
     @MainActor
     static func main() {
         let app = NSApplication.shared
-        let delegate = AirdropIOSMacAppDelegate()
+        let delegate = AccountActivityIOSMacAppDelegate()
         app.delegate = delegate
         app.setActivationPolicy(.regular)
-        installAppMenu(appName: "AirdropIOS")
+        installAppMenu(appName: "AccountActivityIOS")
         NSWindow.allowsAutomaticWindowTabbing = false
         app.activate(ignoringOtherApps: true)
         withExtendedLifetime(delegate) {
@@ -23,10 +23,10 @@ struct AirdropIOSApp {
 }
 #else
 @main
-struct AirdropIOSApp: App {
+struct AccountActivityIOSApp: App {
     var body: some Scene {
         WindowGroup {
-            AirdropRequestView()
+            AccountActivityView()
         }
     }
 }

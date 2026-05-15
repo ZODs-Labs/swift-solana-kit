@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_NAME="AirdropIOS"
-BUNDLE_ID="dev.swiftSolanaKit.examples.AirdropIOS"
+APP_NAME="AccountActivityIOS"
+BUNDLE_ID="dev.swiftSolanaKit.examples.AccountActivityIOS"
 MINIMUM_IOS_VERSION="17.0"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -36,10 +36,9 @@ BIN_PATH="$(swift build \
 
 APP_DIR="$PACKAGE_DIR/.build/ios-simulator/$APP_NAME.app"
 rm -rf "$APP_DIR"
-mkdir -p "$APP_DIR"
+mkdir -p "$APP_DIR/Base.lproj"
 
 cp "$BIN_PATH" "$APP_DIR/$APP_NAME"
-mkdir -p "$APP_DIR/Base.lproj"
 cat > "$APP_DIR/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
