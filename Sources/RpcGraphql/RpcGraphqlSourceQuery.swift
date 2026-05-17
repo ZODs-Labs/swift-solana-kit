@@ -118,7 +118,10 @@ struct RpcGraphqlSourceQueryExecutor: Sendable {
             case let .field(name, arguments, nestedSelections):
                 let fieldName = RpcGraphqlSelectionVisitor.canonicalFieldName(name, arguments: arguments)
                 if fieldName == "__typename" {
-                    object[name] = .string(result.jsonParsedConfigs["accountType"] ?? "Account")
+                    object[name] = .string(RpcGraphqlTypeResolvers.accountTypeName(
+                        accountType: result.jsonParsedConfigs["accountType"],
+                        programName: result.jsonParsedConfigs["programName"]
+                    ))
                 } else if fieldName == "address" {
                     object[name] = .string(result.address)
                 } else if fieldName == "data" {
