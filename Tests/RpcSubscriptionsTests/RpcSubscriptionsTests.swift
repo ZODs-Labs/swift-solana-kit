@@ -195,7 +195,7 @@ final class RpcSubscriptionsTests: XCTestCase {
         _ = try await transport(
             RpcSubscriptionsTransportConfig(request: request, signal: AbortSignal(), execute: { _ in publisher })
         )
-        try await Task.sleep(nanoseconds: 2_000_000)
+        await rpcSubscriptionsYieldTurns()
 
         XCTAssertEqual(calls.withLock { $0 }, 1)
         XCTAssertFalse(try XCTUnwrap(innerSignal.withLock { $0 }).aborted)
@@ -405,5 +405,11 @@ private extension RpcJsonValue {
             return nil
         }
         return values[index]
+    }
+}
+
+private func rpcSubscriptionsYieldTurns(_ count: Int = 10) async {
+    for _ in 0..<count {
+        await Task.yield()
     }
 }
