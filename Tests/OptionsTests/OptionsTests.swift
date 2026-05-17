@@ -159,7 +159,7 @@ final class OptionsTests: XCTestCase {
         XCTAssertEqual(codec.maxSize, 2)
     }
 
-    func testNestedNoPrefixOptionsCollapseSomeNoneLikeUpstream() throws {
+    func testNestedNoPrefixOptionsCollapseSomeNoneLikeMissingBytes() throws {
         let inner = try getOptionCodec(getU16Codec(), prefix: .none)
         let codec = try getOptionCodec(inner, prefix: .none)
 
