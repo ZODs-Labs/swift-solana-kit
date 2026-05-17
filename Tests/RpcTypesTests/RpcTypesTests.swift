@@ -33,7 +33,7 @@ final class RpcTypesTests: XCTestCase {
         )
     }
 
-    func testBlockhashComparatorSortsLikeUpstreamCollator() {
+    func testBlockhashComparatorSortsBase58ValuesByLocaleRules() {
         let values = [
             "Ht1VrhoyhwMGMpBBi89BPdJp5R39Mu49suKx3A22W9Qs",
             "J9ZSLc9qPg3FR8UqfN6ae1QkVReUmnpLgQqFkGEPqmod",
