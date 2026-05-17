@@ -174,8 +174,12 @@ final class SubscribableRuntimeBehaviorTests: XCTestCase {
         }
         try await subscribableRuntimeWaitUntil { await factory.callCount() == 1 }
         let firstPublisher = try await factory.publisher(at: 0)
+        try await subscribableRuntimeWaitUntil {
+            firstPublisher.hasSignal(channel: "data") && firstPublisher.hasSignal(channel: "error")
+        }
         firstPublisher.publish("data", "old")
         firstPublisher.publish("error", SubscribableRuntimeError(message: "stream failed"))
+        try await subscribableRuntimeWaitUntil { store.getUnifiedState().status == .error }
         XCTAssertEqual(store.getUnifiedState().status, .error)
         XCTAssertEqual(store.getState(), "old")
         XCTAssertEqual((store.getError() as? SubscribableRuntimeError)?.message, "stream failed")
@@ -290,6 +294,10 @@ private final class SubscribableRuntimeCapturingPublisher: DataPublisher {
 
     func signalAborted(channel: String) -> Bool {
         signals.withLock { $0[channel]?.aborted ?? false }
+    }
+
+    func hasSignal(channel: String) -> Bool {
+        signals.withLock { $0[channel] != nil }
     }
 }
 
