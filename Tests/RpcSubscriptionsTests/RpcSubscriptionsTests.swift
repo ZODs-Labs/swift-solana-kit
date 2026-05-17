@@ -110,7 +110,7 @@ final class RpcSubscriptionsTests: XCTestCase {
         XCTAssertFalse(afterFirstAbort)
 
         signalB.abort()
-        try await Task.sleep(nanoseconds: 2_000_000)
+        try await rpcSubscriptionsWaitUntil { capturedInnerSignal.aborted }
         let afterSecondAbort = capturedInnerSignal.aborted
         XCTAssertTrue(afterSecondAbort)
     }
@@ -195,7 +195,7 @@ final class RpcSubscriptionsTests: XCTestCase {
         _ = try await transport(
             RpcSubscriptionsTransportConfig(request: request, signal: AbortSignal(), execute: { _ in publisher })
         )
-        await rpcSubscriptionsYieldTurns()
+        try await Task.sleep(nanoseconds: 2_000_000)
 
         XCTAssertEqual(calls.withLock { $0 }, 1)
         XCTAssertFalse(try XCTUnwrap(innerSignal.withLock { $0 }).aborted)
@@ -408,8 +408,16 @@ private extension RpcJsonValue {
     }
 }
 
-private func rpcSubscriptionsYieldTurns(_ count: Int = 10) async {
-    for _ in 0..<count {
-        await Task.yield()
+private func rpcSubscriptionsWaitUntil(
+    timeoutNanoseconds: UInt64 = 500_000_000,
+    _ predicate: @escaping @Sendable () -> Bool
+) async throws {
+    let start = ContinuousClock.now
+    while !predicate() {
+        if start.duration(to: .now).components.attoseconds > Int64(timeoutNanoseconds) * 1_000_000_000 {
+            XCTFail("Timed out waiting for condition")
+            return
+        }
+        try await Task.sleep(nanoseconds: 1_000_000)
     }
 }

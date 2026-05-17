@@ -503,7 +503,7 @@ private final class RpcSubscriptionsCoalescingState: Sendable {
             return
         }
         Task { [weak self] in
-            await Task.yield()
+            try? await Task.sleep(nanoseconds: 10_000)
             self?.removeIfStillUnsubscribed(key: key, entryID: entryID)
         }
     }
