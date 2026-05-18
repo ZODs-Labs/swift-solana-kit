@@ -20,7 +20,6 @@ ZODSol.app/
 *.log
 *.local
 *.env.local
-UPSTREAM_PIN
 
 # Local verification artifacts
 .local-oracle/

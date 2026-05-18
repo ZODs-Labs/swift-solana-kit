@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: "0 4 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  swiftpm-gates:
+    name: SwiftPM gates
+    uses: ./.github/workflows/swiftpm-gates.yml
+    permissions:
+      contents: read
+    with:
+      run_examples: true
+      run_ios: true

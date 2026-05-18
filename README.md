@@ -13,7 +13,15 @@ macOS 14+, iOS 17+, Swift 6.0+ and Xcode 16.0+.
 
 ## Installation
 
-Add the package to your SwiftPM manifest:
+The current public candidate is `0.9.0-rc.1`. Pin release candidates exactly while validating them in production:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/ZODs-Labs/swift-solana-kit.git", exact: "0.9.0-rc.1")
+]
+```
+
+After the stable `0.9.0` tag is published, applications can move to the normal SwiftPM version range:
 
 ```swift
 dependencies: [

@@ -1,0 +1,9 @@
+# Keep generated GitHub release archives focused on source consumers.
+.github/** export-ignore
+.claude/** export-ignore
+.local-oracle/** export-ignore
+.build/** export-ignore
+Oracle/** export-ignore
+AGENTS.md export-ignore
+CLAUDE.md export-ignore
+Package.resolved export-ignore

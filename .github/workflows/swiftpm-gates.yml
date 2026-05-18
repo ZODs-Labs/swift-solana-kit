@@ -1,0 +1,187 @@
+name: SwiftPM Gates
+
+on:
+  workflow_call:
+    inputs:
+      run_examples:
+        description: Run standalone example package builds and tests.
+        required: false
+        type: boolean
+        default: true
+      run_ios:
+        description: Build the root package for the iOS simulator SDK.
+        required: false
+        type: boolean
+        default: true
+  workflow_dispatch:
+    inputs:
+      run_examples:
+        description: Run standalone example package builds and tests.
+        required: false
+        type: boolean
+        default: true
+      run_ios:
+        description: Build the root package for the iOS simulator SDK.
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  package:
+    name: Root package
+    runs-on: macos-15
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Capture toolchain
+        id: toolchain
+        run: |
+          set -euo pipefail
+          swift --version
+          xcodebuild -version
+          xcrun --sdk iphonesimulator --show-sdk-path
+          version_hash="$(swift --version | shasum | cut -d ' ' -f 1)"
+          echo "version-hash=${version_hash}" >> "${GITHUB_OUTPUT}"
+
+      - name: Restore SwiftPM build cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            .build/macos
+            .build/ios-simulator
+          key: root-${{ runner.os }}-${{ steps.toolchain.outputs.version-hash }}-${{ hashFiles('Package.swift', 'Sources/**/*.swift', 'Tests/**/*.swift') }}
+          restore-keys: |
+            root-${{ runner.os }}-${{ steps.toolchain.outputs.version-hash }}-
+
+      - name: Validate package manifest
+        run: |
+          set -euo pipefail
+          swift package dump-package > "${RUNNER_TEMP}/package.json"
+
+      - name: Build root package
+        run: |
+          set -euo pipefail
+          swift build --scratch-path .build/macos
+
+      - name: Build iOS simulator package
+        if: inputs.run_ios
+        run: |
+          set -euo pipefail
+          sdk_path="$(xcrun --sdk iphonesimulator --show-sdk-path)"
+          swift build --scratch-path .build/ios-simulator --triple arm64-apple-ios17.0-simulator --sdk "${sdk_path}"
+
+      - name: Test root package
+        run: |
+          set -euo pipefail
+          swift test --scratch-path .build/macos
+
+      - name: Dump public symbol graph
+        run: |
+          set -euo pipefail
+          swift package --scratch-path .build/macos dump-symbol-graph --minimum-access-level public --skip-synthesized-members
+
+      - name: Verify PublicAPI inventory
+        run: |
+          set -euo pipefail
+          missing=0
+          for target_path in Sources/*; do
+            target="$(basename "${target_path}")"
+            if [[ ! -f "PublicAPI/${target}.swift" ]]; then
+              echo "::error file=PublicAPI/${target}.swift::Missing PublicAPI contract for ${target}"
+              missing=1
+            fi
+          done
+          if [[ "${missing}" -ne 0 ]]; then
+            exit 1
+          fi
+
+      - name: Audit release archive contents
+        run: |
+          set -euo pipefail
+          archive="${RUNNER_TEMP}/swift-solana-kit.tar"
+          listing="${RUNNER_TEMP}/archive-files.txt"
+          git archive --format=tar HEAD > "${archive}"
+          tar -tf "${archive}" > "${listing}"
+          forbidden_patterns=(
+            '^\.github/'
+            '^\.build/'
+            '^\.claude/'
+            '^\.local-oracle/'
+            '^Oracle/'
+            '^AGENTS\.md$'
+            '^CLAUDE\.md$'
+            '^Package\.resolved$'
+          )
+          for pattern in "${forbidden_patterns[@]}"; do
+            if grep -E "${pattern}" "${listing}" > /dev/null; then
+              echo "::error::Release archive contains forbidden path matching ${pattern}"
+              grep -E "${pattern}" "${listing}"
+              exit 1
+            fi
+          done
+
+  examples:
+    name: Example packages
+    if: inputs.run_examples
+    runs-on: macos-15
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        example:
+          - Examples/BalanceMac
+          - Examples/AccountActivityIOS
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Capture toolchain
+        id: toolchain
+        run: |
+          set -euo pipefail
+          swift --version
+          xcodebuild -version
+          version_hash="$(swift --version | shasum | cut -d ' ' -f 1)"
+          echo "version-hash=${version_hash}" >> "${GITHUB_OUTPUT}"
+
+      - name: Capture example cache slug
+        id: example
+        run: |
+          set -euo pipefail
+          slug="$(echo "${{ matrix.example }}" | tr '/[:upper:]' '-[:lower:]')"
+          echo "slug=${slug}" >> "${GITHUB_OUTPUT}"
+
+      - name: Restore example build cache
+        uses: actions/cache@v5
+        with:
+          path: ${{ matrix.example }}/.build
+          key: example-${{ steps.example.outputs.slug }}-${{ runner.os }}-${{ steps.toolchain.outputs.version-hash }}-${{ hashFiles('Examples/**/Package.swift', 'Examples/**/Sources/**/*.swift', 'Examples/**/Tests/**/*.swift', 'Package.swift', 'Sources/**/*.swift') }}
+          restore-keys: |
+            example-${{ steps.example.outputs.slug }}-${{ runner.os }}-${{ steps.toolchain.outputs.version-hash }}-
+
+      - name: Build example
+        working-directory: ${{ matrix.example }}
+        run: |
+          set -euo pipefail
+          swift build --scratch-path .build/macos
+
+      - name: Test example
+        working-directory: ${{ matrix.example }}
+        run: |
+          set -euo pipefail
+          swift test --scratch-path .build/macos
