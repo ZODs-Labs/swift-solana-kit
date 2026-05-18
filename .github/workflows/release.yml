@@ -66,32 +66,45 @@ jobs:
       run_examples: true
       run_ios: true
 
-  release-ready:
-    name: Report release readiness
+  publish-github-release:
+    name: Publish GitHub release
     needs:
       - validate-version
       - swiftpm-gates
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
-      - name: Report release command
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Create release
         env:
+          GH_TOKEN: ${{ github.token }}
           VERSION: ${{ needs.validate-version.outputs.version }}
           PRERELEASE: ${{ needs.validate-version.outputs.prerelease }}
         run: |
           set -euo pipefail
-          prerelease_arg=""
-          if [[ "${PRERELEASE}" == "true" ]]; then
-            prerelease_arg=" --prerelease"
+          if gh release view "${VERSION}" > /dev/null 2>&1; then
+            echo "GitHub release ${VERSION} already exists."
+            exit 0
           fi
 
-          {
-            echo "Release gates passed for ${VERSION}."
-            echo
-            echo "Create the GitHub release with maintainer credentials:"
-            echo
-            echo "\`\`\`sh"
-            echo "gh release create ${VERSION} --title v${VERSION} --generate-notes --verify-tag${prerelease_arg}"
-            echo "\`\`\`"
-          } >> "${GITHUB_STEP_SUMMARY}"
+          args=(
+            "${VERSION}"
+            "--title"
+            "v${VERSION}"
+            "--generate-notes"
+            "--verify-tag"
+          )
+
+          if [[ "${PRERELEASE}" == "true" ]]; then
+            args+=("--prerelease")
+          fi
+
+          gh release create "${args[@]}"
