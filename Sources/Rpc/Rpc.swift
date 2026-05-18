@@ -298,6 +298,8 @@ private func expandScientificNotation(_ value: String) -> String? {
 }
 
 private actor RpcRequestCoalescer {
+    private static let schedulingWindowNanoseconds: UInt64 = 100_000
+
     private var requestsByDeduplicationKey: [String: CoalescedRequest]?
     private var resetTask: Task<Void, Never>?
 
@@ -309,7 +311,7 @@ private actor RpcRequestCoalescer {
         if requestsByDeduplicationKey == nil {
             requestsByDeduplicationKey = [:]
             let task = Task { [weak self] in
-                await Task.yield()
+                try? await Task.sleep(nanoseconds: Self.schedulingWindowNanoseconds)
                 await self?.reset()
             }
             resetTask = task

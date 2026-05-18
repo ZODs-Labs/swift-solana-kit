@@ -40,7 +40,7 @@ Do not hide broad formatting changes inside behavior changes.
 
 Every pull request to `master` and every push to `master` runs the reusable SwiftPM gate workflow. It validates the package manifest, builds the root package, builds the iOS simulator target, runs the test suite, dumps the public symbol graph, checks `PublicAPI/` target coverage and audits the Git release archive for local-only files.
 
-Release tags run the same SwiftPM gates before a GitHub release is created. Do not tag a release until the target commit is already green on CI.
+Release tags run the same SwiftPM gates and print the maintainer command for creating the GitHub release. Do not tag a release until the target commit is already green on CI.
 
 ## Tests
 

@@ -275,7 +275,9 @@ final class RpcSubscriptionsTests: XCTestCase {
             }
         }
         let autopingChannel = getRpcSubscriptionsChannelWithAutoping(abortSignal: signal, channel: channel, intervalMs: 1)
-        try await Task.sleep(nanoseconds: 10_000_000)
+        try await rpcSubscriptionsWaitUntil {
+            !sent.withLock(\.isEmpty)
+        }
         signal.abort()
         _ = autopingChannel
         let ping = try XCTUnwrap(sent.withLock { $0.first })
@@ -295,7 +297,9 @@ final class RpcSubscriptionsTests: XCTestCase {
             intervalMs: 1
         )
 
-        try await Task.sleep(nanoseconds: 10_000_000)
+        try await rpcSubscriptionsWaitUntil {
+            sendCount.withLock { $0 >= 2 }
+        }
 
         _ = autopingChannel
         XCTAssertGreaterThanOrEqual(sendCount.withLock { $0 }, 2)
@@ -313,6 +317,9 @@ final class RpcSubscriptionsTests: XCTestCase {
             intervalMs: 1
         )
 
+        try await rpcSubscriptionsWaitUntil {
+            sendCount.withLock { $0 >= 1 }
+        }
         try await Task.sleep(nanoseconds: 10_000_000)
 
         _ = autopingChannel
