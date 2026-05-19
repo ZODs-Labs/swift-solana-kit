@@ -3,7 +3,7 @@
 [![Release](https://img.shields.io/github/v/release/ZODs-Labs/swift-solana-kit?sort=semver)](https://github.com/ZODs-Labs/swift-solana-kit/releases)
 [![Swift versions](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FZODs-Labs%2Fswift-solana-kit%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/ZODs-Labs/swift-solana-kit)
 [![Platforms](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FZODs-Labs%2Fswift-solana-kit%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/ZODs-Labs/swift-solana-kit)
-[![Documentation](https://img.shields.io/badge/docs-ZODs-blue)](https://docs.zods.pro/swift-solana-kit/)
+[![Documentation](https://img.shields.io/badge/docs-Swift%20Package%20Index-blue)](https://swiftpackageindex.com/ZODs-Labs/swift-solana-kit/documentation)
 
 A Swift SDK for building Solana applications on Apple platforms. It uses Swift 6, Foundation, CryptoKit, URLSession and Swift concurrency with no third-party SDK dependencies in core targets.
 
@@ -109,9 +109,9 @@ func sendAndConfirm(_ transaction: Transaction) async throws {
 
 ## Documentation
 
-API documentation will be hosted at:
+API documentation is hosted by Swift Package Index:
 
-https://docs.zods.pro/swift-solana-kit/
+https://swiftpackageindex.com/ZODs-Labs/swift-solana-kit/documentation
 
 The local DocC catalogs live next to their library targets under `Sources/<Target>/Documentation.docc/`.
 
